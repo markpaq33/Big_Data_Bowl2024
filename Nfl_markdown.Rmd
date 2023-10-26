@@ -1,0 +1,54 @@
+---
+title: "NFL_ggplot"
+author: "Mark Paquette"
+date: "2023-10-20"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+data.set <- read.table("players.csv", header=TRUE, sep=",")
+attach(data.set)
+library(ggplot2)
+```
+
+# Graph One: Violin Plot
+
+```{r, echo=FALSE, warning=FALSE}
+ggplot(data.set,aes(x=position, y=weight)) + geom_violin(fill="red")
+```
+
+This is a violin plot and helps us visualize a numerical value (weight) vs
+a categorical value (player position). This graph helps us gain an understanding
+of both what the most common weights are at a given position while also showing
+some of the outlier weight (for example a FB who weighs about 310 lbs). This
+helps us answer questions like what is the typical weight for a Quarterback?
+
+Since it is by organized by position, this type of graph does not really tell
+us the statistics of the weight as a whole. To find this we would want a 
+plot that only uses weight and not position
+
+# Graph Two: Pie Chart
+
+```{r, echo=FALSE, warning=FALSE}
+pos <- c("C","CB","DB","DE","DT","FB","FS","G","ILB","LS","MLB","NT","OLB","QB",
+         "RB","SS","T","TE","WR")
+position_counts <- table(data.set$position)
+position_counts <- position_counts[match(pos, names(position_counts))]
+
+ggplot(data.frame(pos, position_counts), aes(x = "", y = position_counts, fill = pos)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  theme_void()  # Remove unnecessary elements
+```
+
+This Pie chart helps us visualize the number of players at each position. This
+helps us gain an understanding what the most common and least common positions
+are etc. One thing this is missing is exact numbers. We are not able to tell
+how many of each position there are, we can only estimate how they compare to
+one another. To actually represent this, we would need the numerical values 
+for each position labeled on the chart or part of the legend.
+
+
